@@ -150,9 +150,9 @@ def prepare_page(html_file: str, topic: str) -> str:
 <script>
 (() => {
   const setFrameHeight = () => {
-    let height = 900;
+    let height = 720;
     try {
-      height = Math.max(600, Math.min(1200, window.parent.innerHeight));
+      height = Math.max(480, Math.min(1100, window.parent.innerHeight));
     } catch (_) {}
     window.parent.postMessage({
       isStreamlitMessage: true,
@@ -182,6 +182,9 @@ st.markdown(
       html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
         margin: 0 !important;
         padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
       }
       [data-testid="stHeader"], [data-testid="stToolbar"],
       [data-testid="stDecoration"], [data-testid="stStatusWidget"],
@@ -192,9 +195,16 @@ st.markdown(
         padding: 0 !important;
       }
       [data-testid="stVerticalBlock"] { gap: 0 !important; }
+      [data-testid="stElementContainer"], .element-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
       iframe[title="streamlit.components.v1.html"] {
         display: block;
-        width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100dvh !important;
         border: 0;
       }
     </style>
@@ -208,6 +218,6 @@ topic = query_value("topic", "")
 
 components.html(
     prepare_page(html_file, topic),
-    height=900,
+    height=720,
     scrolling=True,
 )
