@@ -123,15 +123,16 @@ def prepare_page(html_file: str, topic: str) -> str:
         count=1,
         flags=re.IGNORECASE,
     )
+    runtime_script = (
+        "<script>"
+        f"window.__VPJ_PAGE__={page_json};"
+        f"window.__VPJ_TOPIC__={topic_json};"
+        f"{js_text}"
+        "</script>"
+    )
     html_text = re.sub(
         r'<script\s+src=["\'](?:\.\./)?script\.js["\']\s+defer></script>',
-        (
-            "<script>"
-            f"window.__VPJ_PAGE__={page_json};"
-            f"window.__VPJ_TOPIC__={topic_json};"
-            f"{js_text}"
-            "</script>"
-        ),
+        "",
         html_text,
         count=1,
         flags=re.IGNORECASE,
@@ -165,7 +166,15 @@ def prepare_page(html_file: str, topic: str) -> str:
 })();
 </script>
 """
-    return html_text.replace("</body>", frame_script + "</body>", 1)
+    # The original script used `defer`. An inline script in the document head
+    # does not preserve that behaviour, so inject it after the body content.
+    # This prevents reveal elements from remaining invisible when the script
+    # queries document.body before it exists.
+    return html_text.replace(
+        "</body>",
+        runtime_script + frame_script + "</body>",
+        1,
+    )
 
 
 st.set_page_config(
