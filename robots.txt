@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vp-jha.github.io/Website_book/sitemap.xml
